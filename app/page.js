@@ -65,7 +65,7 @@ export default function Home() {
         </div>
      </div>
       ) : (
-        <div className='flex items-center justify-center text-lg'>
+        <div className='flex flex-col items-center justify-center text-lg'>
           <div className='flex items-center justify-center text-md m-4 font-medium text-black px-3 py-2 cursor-pointer'>Logged in with <span className='text-green-500 mx-2'>{user?.email}</span></div>
           <div className='flex items-center justify-center text-md m-4 text-[#eb5757] text-md font-semibold px-3 py-2 cursor-pointer active:text-black' onClick={logout}>Logout</div>
         </div>
