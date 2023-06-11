@@ -1,22 +1,23 @@
 "use client"
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react'
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import {useRouter} from 'next/navigation'
-import {auth} from '../../firebase'
+import {auth}  from '../../firebase'
 
-function Login() {
+function Signup() {
     const router = useRouter();
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password,setPassword]=useState('');
     const [emailValid,setEmailValid]=useState(false);
-
-
-async function signIn () {
     
-    signInWithEmailAndPassword(auth, email, password)
+
+ function signUp () {
+    console.log(auth)
+    createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-        const user = userCredential.user
+         const user = userCredential.user
          router.push('/')
     })
     .catch((error) => {
@@ -37,25 +38,26 @@ async function signIn () {
                 </div>
             ) : (
                 <div  className=' w-[100%]'>
+                <label htmlFor="name" className='text-lg'>Name</label>
+                <input type="name" id='name' value={name} onChange={e => setName(e.target.value)} className='flex items-center justify-center  w-[100%] bg-[#f2f1ee99] outline-none focus-visible:outline-[#2383e291] rounded-sm text-md px-3 py-2 my-4' placeholder='Enter your name here ' />
                 <label htmlFor="email" className='text-lg'>Email</label>
                 <input type="email" id='email' value={email} onChange={e => setEmail(e.target.value)} className='flex items-center justify-center  w-[100%] bg-[#f2f1ee99] outline-none focus-visible:outline-[#2383e291] rounded-sm text-md px-3 py-2 my-4' placeholder='Enter your email address here ' />
             </div>
             ) }
             {emailValid ? (
                 <div className='flex items-center justify-center text-[#eb5757] text-md font-semibold bg-[#fdf5f2] px-3 py-2 cursor-pointer active:bg-[#ecd2c9]'
-                onClick={signIn} >Continue with Password</div>
+                onClick={signUp} >Continue with Password</div>
             ) : (
                 <div className=' flex items-center justify-center text-[#eb5757] text-md font-semibold bg-[#fdf5f2] px-3 py-2 cursor-pointer active:bg-[#ecd2c9]' 
-                 onClick={()=>{email != '' ? setEmailValid(true) : null}}>Continue with email</div>
+                 onClick={()=>{name && email != '' ? setEmailValid(true) : console.warn('Enter your name and email')}}>Continue with name and email</div>
             )}
 
-             <div className='flex items-center justify-center text-md m-4 text-[#37352fa6] font-medium active:text-black px-3 py-2 cursor-pointer'
-            onClick={()=>{router.push('/signup')}}>Go to signup page
+            <div className='flex items-center justify-center text-md m-4 font-medium text-[#37352fa6] px-3 py-2 cursor-pointer active:text-black'
+            onClick={()=>{router.push('/login')}}>Go to login page
             </div>
-
         </div>
         </div>
     )
 }
 
-export default Login
+export default Signup
