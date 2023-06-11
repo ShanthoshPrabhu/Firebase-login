@@ -17,7 +17,7 @@ async function signIn () {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user
-         router.push('/')
+         router.push('/homescreen')
     })
     .catch((error) => {
         const errorCode = error.code;

@@ -13,7 +13,7 @@ export default function Home() {
     
     signOut(auth).then(() => {
       setUser([]);
-      router.replace('/')
+      router.replace('/homescreen/home')
     }).catch((error) => {
       console.log(error)
     });
