@@ -2,6 +2,9 @@
 import {useRouter} from 'next/navigation'
 import { useEffect, useState } from 'react';
 import { signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import app from '../firebase'
+
 import {auth} from '../firebase'
 
 export default function Home() {
@@ -10,10 +13,11 @@ export default function Home() {
   const [ user,setUser] = useState([])
 
   function logout(){
-    
+    // const auth = app && getAuth();
     signOut(auth).then(() => {
       setUser([]);
-      router.replace('/')
+      localStorage.removeItem('user')
+      
     }).catch((error) => {
       console.log(error)
     });
@@ -21,12 +25,33 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const userData = auth?.currentUser
-   setUser(userData)
-   return
+    // const auth = app && getAuth();
+    // const userData = auth?.currentUser
+    // console.log(userData)
+    // setUser(userData)
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setUser(userData)
+    console.log('user',user)
+    if(userData){
+      const timestamp=userData?.stsTokenManager?.expirationTime
+      console.log('timestamp',timestamp)
+      const expirationDate = new Date(timestamp); 
+      const currentDate = new Date(); 
+      if(expirationDate <= currentDate){
+        signOut(auth).then(() => {
+          setUser([]);
+          localStorage.removeItem('user')
+        }).catch((error) => {
+          console.log(error)
+        });
+      }
+    } else {
+      router.push('/login')
+    }
+    
   }, [])
-  console.log('user',user?.length)
-  console.log('authhh',auth?.currentUser)
+  console.log('userData',user)
+  // console.log('authhh',auth?.currentUser)
 
   return (
     <div className=' w-screen absolute top-[50%] flex justify-center items-center max-h-screen'>

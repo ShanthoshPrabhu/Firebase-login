@@ -10,13 +10,15 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password,setPassword]=useState('');
     const [emailValid,setEmailValid]=useState(false);
-
+    // const [ user,setUser] = useState([])
+//
 
 async function signIn () {
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user
+        localStorage.setItem('user', JSON.stringify(user));
          router.push('/')
     })
     .catch((error) => {

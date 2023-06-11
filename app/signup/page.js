@@ -18,6 +18,7 @@ function Signup() {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
          const user = userCredential.user
+         localStorage.setItem('user', JSON.stringify(user));
          router.push('/')
     })
     .catch((error) => {
