@@ -7,7 +7,7 @@ import {auth} from '../../firebase'
 import { getProviders, signIn } from "next-auth/react";
 
 
-function Login({providers}) {
+function Login() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password,setPassword]=useState('');
