@@ -2,18 +2,19 @@
 import {useRouter} from 'next/navigation'
 import { useEffect, useState } from 'react';
 import { signOut } from "firebase/auth";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from '../firebase'
+import { useSession } from 'next-auth/react'
 
-import {auth} from '../firebase'
+// import {auth} from '../firebase'
 
 export default function Home() {
 
   const router = useRouter();
   const [ user,setUser] = useState([])
-
+  const { data: session ,status} = useSession()
   function logout(){
-    // const auth = app && getAuth();
+    const auth = app && getAuth();
     signOut(auth).then(() => {
       setUser([]);
       localStorage.removeItem('user')
@@ -24,32 +25,27 @@ export default function Home() {
      return
   }
 
-  useEffect(() => {
-    // const auth = app && getAuth();
-    // const userData = auth?.currentUser
-    // console.log(userData)
-    // setUser(userData)
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setUser(userData)
-    console.log('user',user)
-    if(userData){
-      const timestamp=userData?.stsTokenManager?.expirationTime
-      console.log('timestamp',timestamp)
-      const expirationDate = new Date(timestamp); 
-      const currentDate = new Date(); 
-      if(expirationDate <= currentDate){
-        signOut(auth).then(() => {
-          setUser([]);
-          localStorage.removeItem('user')
-        }).catch((error) => {
-          console.log(error)
-        });
+
+  function onAuthStateChange() {
+    const auth = app && getAuth();
+    return  onAuthStateChanged(auth, (userData) => {
+      if (userData) {
+        console.log(userData)
+        return setUser(userData)
+      } else {
+      
       }
-    } else {
-      router.push('/login')
-    }
-    
-  }, [])
+    });
+  }
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+ 
   console.log('userData',user)
   // console.log('authhh',auth?.currentUser)
 
