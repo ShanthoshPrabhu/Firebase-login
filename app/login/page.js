@@ -7,7 +7,7 @@ import {auth} from '../../firebase'
 import { getProviders, signIn } from "next-auth/react";
 
 
-function Login({ providers }) {
+function Login() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password,setPassword]=useState('');
@@ -15,7 +15,6 @@ function Login({ providers }) {
     // const [ user,setUser] = useState([])
 //
 
-console.log(providers)
 async function signIn () {
     
     signInWithEmailAndPassword(auth, email, password)
@@ -65,11 +64,3 @@ async function signIn () {
 
 export default Login
 
-export async function getServerSideProps(context) {
-    const providers = await getProviders(context)
-    return {
-      props: {
-        providers
-      },
-    }
-  }
